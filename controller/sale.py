@@ -9,6 +9,7 @@ class SaleController:
 
     def add_events(self):
         self.view.get_close_button().configure(command=self.view.destroy)
+         
 
         
         
