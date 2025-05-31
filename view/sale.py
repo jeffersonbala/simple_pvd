@@ -5,12 +5,12 @@ from view.base import BaseView
 
 class SaleView(BaseView):
 
-    def __init__(self, parent=None):
+    def __init__(self, parent: BaseView):
         super().__init__()
 
-        self.parent : BaseView = parent
-
         self.create_widgets()
+
+        self.parent = parent
 
         self.visible = True
 
@@ -29,17 +29,15 @@ class SaleView(BaseView):
         title_label.grid(row=1, column=0, columnspan=3, pady=20)
 
         new_sale_button = ttk.Button(self, text="Nova Venda")
-        new_sale_button.grid(row=2, column=0, padx=10, pady=10)
+        new_sale_button.grid(row=2, column=0, columnspan=2, padx=10, pady=10)
 
-        sales_history_button = ttk.Button(self, text="Histórico de Vendas")
-        sales_history_button.grid(row=2, column=1, padx=10, pady=10)
-
-        back_button = ttk.Button(self, text="Voltar")
+        back_button = ttk.Button(self, text="Fechar")
         back_button.grid(row=2, column=2, padx=10, pady=10)
 
-        exit_button = ttk.Button(self, text="Sair", command=self.quit)
-        exit_button.grid(row=3, column=0, columnspan=3, pady=30)
 
-
-    def get_back_button(self):
+    def get_close_button(self):
         return self.grid_slaves(row=2, column=2)[0]
+      
+    def get_new_sale_button(self):
+        return self.grid_slaves(row=2, column=0)[0]
+    

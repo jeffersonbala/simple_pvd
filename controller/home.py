@@ -11,7 +11,6 @@ class HomeController:
         self.view.get_sales_button().configure(command=self.open_sales_view)
 
     def open_sales_view(self):
-        self.view.toggle_visibility()
 
         sales_view = SaleView(self.view)
         sales_controller = SaleController(sales_view)

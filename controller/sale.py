@@ -8,10 +8,11 @@ class SaleController:
         self.add_events()
 
     def add_events(self):
-        self.view.get_back_button().configure(command=self.go_back)
+        self.view.get_close_button().configure(command=self.view.destroy)
 
-    def go_back(self):
-        self.view.parent.toggle_visibility()
-        self.view.toggle_visibility()
-        self.view.destroy()
+        
+        
+
+ 
+
 
