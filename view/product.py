@@ -1,5 +1,10 @@
+import re
+
 from .base import BaseView
-from tkinter import ttk
+
+from db.stock import Stock
+
+from tkinter import ttk, Toplevel
 
 class ProductView(BaseView):
 
@@ -13,61 +18,101 @@ class ProductView(BaseView):
         self.visible = True
 
     def create_widgets(self):
-        self.grid_columnconfigure(0, weight=1)
-        self.grid_columnconfigure(1, weight=1)
-        self.grid_columnconfigure(2, weight=1)
-        self.grid_rowconfigure(0, weight=1)
-        self.grid_rowconfigure(1, weight=1)
-        self.grid_rowconfigure(2, weight=1)
 
         icon_label = ttk.Label(self, text="🛍️ Produtos", font=("Source Code Mono", 64))
-        icon_label.grid(row=0, column=0, columnspan=3, pady=20)
+        icon_label.pack(pady=20)
 
-        new_product_button = ttk.Button(self, text="Novo Produto")
-        new_product_button.grid(row=2, column=0, columnspan=2, padx=10, pady=10)
+        tabs = ttk.Notebook(self)
+        tabs.pack(fill="both", expand=True)
+
+        product_tab = ttk.Frame(tabs)
+        tabs.add(product_tab, text="Produtos")
+        self.create_table(Stock.get_stock(), parent=product_tab)
+
+        new_product_tab = ttk.Frame(tabs)
+        tabs.add(new_product_tab, text="Novo Produto")
+        self.create_new_product_form(parent=new_product_tab)
 
         back_button = ttk.Button(self, text="Fechar", command=self.destroy)
-        back_button.grid(row=2, column=2, padx=10, pady=10)
+        back_button.pack(side="right", padx=10, pady=10)
 
-        self.create_table()
-
-    def get_close_button(self):
-        return self.grid_slaves(row=2, column=2)[0]
     
-    def get_new_product_button(self):
-        return self.grid_slaves(row=2, column=0)[0]
-    
-    def create_table(self):
-        # TODO: Get products from stock database
+    def create_table(self, data, parent=None):
 
-        data = [
-            ("Arroz", 10, "R$ 5,00"),
-            ("Feijão", 5, "R$ 4,00"),
-            ("Macarrão", 8, "R$ 3,00"),
-            ("Carne", 20, "R$ 15,00"),
-            ("Frango", 15, "R$ 10,00"),
-            ("Leite", 12, "R$ 2,50"),
-            ("Ovos", 30, "R$ 0,50"),
-            ("Pão", 25, "R$ 1,00"),
-            ("Manteiga", 18, "R$ 3,50"),
-            ("Queijo", 22, "R$ 6,00"),
-            ("Maçã", 40, "R$ 1,20"),
-            ("Banana", 35, "R$ 0,80"),
-            ("Laranja", 28, "R$ 1,50")
-        ]
+        if not parent:
+            parent = self
 
-        scrollbar = ttk.Scrollbar(self, orient="vertical")
-        table = ttk.Treeview(self, columns=("Descrição", "Quantidade", "Preço"), show="headings", yscrollcommand=scrollbar.set)
+        scrollbar = ttk.Scrollbar(parent, orient="vertical")
+        table = ttk.Treeview(parent, columns=("Cod.", "Descrição", "Quantidade", "Preço"), show="headings", yscrollcommand=scrollbar.set)
 
+        table.heading("Cod.", text="Cod.")
         table.heading("Descrição", text="Descrição")
         table.heading("Quantidade", text="Quantidade")
         table.heading("Preço", text="Preço")
 
+        table.column("Cod.", width=20)
         table.column("Descrição", width=200)
         table.column("Quantidade", width=100)
         table.column("Preço", width=100)
 
         for item in data:
-            table.insert("", "end", values=item)
+            table.insert("", "end", values=(
+                item["product"].code,
+                item["product"].name,
+                item["quantity"],
+                f"R$ {item['product'].price:.2f}"
+            ))
 
-        table.grid(row=1, column=0, columnspan=3, sticky="nsew")
+        table.pack(fill="both", expand=True)
+
+    def create_new_product_form(self, parent=None):
+        if not parent:
+            parent = self
+
+        name_label = ttk.Label(parent, text="Nome:")
+        name_label.pack(pady=5)
+        self.name_entry = ttk.Entry(parent)
+        self.name_entry.pack(pady=5)
+
+        price_label = ttk.Label(parent, text="Preço:")
+        price_label.pack(pady=5)
+        self.price_entry = ttk.Entry(parent)
+        self.price_entry.pack(pady=5)
+
+        quantity_label = ttk.Label(parent, text="Quantidade:")
+        quantity_label.pack(pady=5)
+        self.quantity_entry = ttk.Entry(parent)
+        self.quantity_entry.pack(pady=5)
+
+        self.save_button = ttk.Button(parent, text="Salvar")
+        self.save_button.pack(pady=10)
+
+    def get_save_product_button(self) -> ttk.Button:
+        return self.save_button
+    
+    def get_name_entry(self) -> ttk.Entry:
+        return self.name_entry
+    
+    def get_price_entry(self) -> ttk.Entry:
+        return self.price_entry
+    
+    def get_form_data(self) -> dict:
+        name = self.get_name_entry().get()
+        price = self.get_price_entry().get()
+        quantity = self.quantity_entry.get() if hasattr(self, 'quantity_entry') else None
+
+        if not quantity:
+            quantity = 0
+
+        if not name or not price:
+            raise ValueError("Nome e preço são obrigatórios.")
+
+        if not re.match(r"^\d+(\.\d{1,2})?$", price):
+            raise ValueError("Preço deve ser um número válido.")
+
+        return {
+            "name": name,
+            "price": float(price),
+            "quantity": quantity
+        }
+        

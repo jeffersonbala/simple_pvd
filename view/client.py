@@ -5,9 +5,9 @@ class ClientView(BaseView):
 
     def __init__(self, parent=None):
         super().__init__()
+        self.title("Gerenciamento de Clientes")
 
         self.parent = parent
-
         self.create_widgets()
 
         self.visible = True

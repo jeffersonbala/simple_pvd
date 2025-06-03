@@ -1,21 +1,14 @@
+from view.product import ProductView
+
 class ProductController:
 
     def __init__(self, view):
-        self.view = view
-
-        self.add_events()
+        self.view : ProductView = view
 
     def add_events(self):
-        pass
+        self.view.get_save_product_button().configure(command=self.add_product)
 
     def add_product(self):
-        # Logic to add a product
-        pass
+        print(self.view.get_form_data())
 
-    def delete_product(self):
-        # Logic to delete a product
-        pass
-
-    def update_product(self):
-        # Logic to update a product
-        pass
+        
