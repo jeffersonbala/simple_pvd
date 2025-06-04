@@ -23,9 +23,8 @@ class Loader:
     @staticmethod
     def update_file(data: pd.DataFrame, filename):
         try:
-            data.to_csv(f"{__BASE_PATH}{filename}.csv", index=False)
-            data.to_json(f"{__BASE_PATH}{filename}.json", orient='records', lines=True)
-            data.to_excel(f"{__BASE_PATH}{filename}.xlsx", index=False)
+            data.to_csv(f"{filename}.csv", index=False)
+            data.to_json(f"{filename}.json", orient='records')
         except Exception as e:
             return f"Error saving file: {e}"
         return f"File {filename} updated successfully in all formats."

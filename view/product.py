@@ -28,7 +28,7 @@ class ProductView(BaseView):
 
         product_tab = ttk.Frame(tabs)
         tabs.add(product_tab, text="Produtos")
-        self.create_table(Stock.get_stock("data/stock.json"), parent=product_tab)
+        self.create_table(Stock.get_stock(), parent=product_tab)
 
         new_product_tab = ttk.Frame(tabs)
         tabs.add(new_product_tab, text="Novo Produto")

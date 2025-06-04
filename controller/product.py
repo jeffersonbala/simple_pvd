@@ -27,6 +27,11 @@ class ProductController:
 
 
         Stock.include_register(product=product, quantity=data['quantity'])
+
+        self.view.create_temp_label(
+            f"Product {product.name} added successfully!",
+            "success"
+        )
         
         
 

@@ -6,7 +6,7 @@ from model.product import Product
 class Stock:
 
     @staticmethod
-    def get_stock(path="data/stock.json"):
+    def get_stock(path="data/stock.csv"):
         return Loader.file_loader(path)
     
 
@@ -23,7 +23,7 @@ class Stock:
 
         stock.head
 
-        Loader.update_file(stock, "stock")
+        Loader.update_file(stock, "data/stock")
         return stock
     
     @staticmethod
