@@ -4,7 +4,8 @@ from .base import BaseView
 
 from db.stock import Stock
 
-from tkinter import ttk, Toplevel
+from tkinter import ttk
+from time import sleep
 
 class ProductView(BaseView):
 
@@ -27,7 +28,7 @@ class ProductView(BaseView):
 
         product_tab = ttk.Frame(tabs)
         tabs.add(product_tab, text="Produtos")
-        self.create_table(Stock.get_stock(), parent=product_tab)
+        self.create_table(Stock.get_stock("data/stock.json"), parent=product_tab)
 
         new_product_tab = ttk.Frame(tabs)
         tabs.add(new_product_tab, text="Novo Produto")
@@ -55,12 +56,13 @@ class ProductView(BaseView):
         table.column("Quantidade", width=100)
         table.column("Preço", width=100)
 
-        for item in data:
+        for item in data.to_dict(orient="records"):
+
             table.insert("", "end", values=(
-                item["product"].code,
-                item["product"].name,
-                item["quantity"],
-                f"R$ {item['product'].price:.2f}"
+                item.get("code", "N/A"),
+                item.get("name", "N/A"),
+                item.get("quantity", 0),
+                f"R$ {item.get('price', 0):.2f}"
             ))
 
         table.pack(fill="both", expand=True)
@@ -90,25 +92,29 @@ class ProductView(BaseView):
     def get_save_product_button(self) -> ttk.Button:
         return self.save_button
     
-    def get_name_entry(self) -> ttk.Entry:
-        return self.name_entry
-    
-    def get_price_entry(self) -> ttk.Entry:
-        return self.price_entry
-    
     def get_form_data(self) -> dict:
-        name = self.get_name_entry().get()
-        price = self.get_price_entry().get()
-        quantity = self.quantity_entry.get() if hasattr(self, 'quantity_entry') else None
+        name = self.name_entry.get()
+        price = self.price_entry.get()
+        quantity = self.quantity_entry.get()
 
         if not quantity:
             quantity = 0
 
         if not name or not price:
-            raise ValueError("Nome e preço são obrigatórios.")
+            self.create_temp_label("Todos os campos são obrigatórios.", parent=self, temp=2000)
+            return None
 
-        if not re.match(r"^\d+(\.\d{1,2})?$", price):
-            raise ValueError("Preço deve ser um número válido.")
+        try:
+            float(price)
+        except ValueError:
+            self.create_temp_label("Preço deve ser um número.", parent=self, temp=2000)
+            return None
+        
+        try:
+            quantity = int(quantity)
+        except ValueError:
+            self.create_temp_label("Quantidade deve ser um número inteiro.", parent=self, temp=2000)
+            return None
 
         return {
             "name": name,

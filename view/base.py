@@ -30,4 +30,12 @@ class BaseView(tk.Tk):
             return
         self.deiconify()
 
+    def create_temp_label(self, text: str, parent=None, temp=7000):
+        if not parent:
+            parent = self
+        label = tk.Label(parent, text=text, foreground='red')
+        label.pack(pady=10)
+        label.after(temp, label.destroy)  
+
+
     

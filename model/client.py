@@ -6,3 +6,9 @@ class Client:
 
     def __repr__(self):
         return f"Client(name={self.name}, address={self.address})"
+    
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "address": self.address
+        }

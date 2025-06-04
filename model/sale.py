@@ -5,6 +5,7 @@ class SaleItem:
     def __init__(self, product, quantity):
         self.product = product
         self.quantity = quantity
+        self.date = datetime.now()
 
     def __repr__(self):
         return f"SaleItems(product={self.product}, quantity={self.quantity})"
@@ -20,19 +21,10 @@ class Sale:
     def amount(self):
         return sum(item['product'].price * item['quantity'] for item in self.items)
 
-    def add_item(self, product, quantity):
-        if quantity <= 0:
-            raise ValueError("Quantity must be greater than zero.")
-        self.items.append(SaleItem(product, quantity))
-
-    def remove_item(self, product, quantity=None):
-        for item in self.items:
-            if item.product == product:
-                if quantity is not None:
-                    if item.quantity < quantity:
-                        raise ValueError("Not enough quantity to remove.")
-                    item.quantity -= quantity
-                else:
-                    self.items.remove(item)
-                return
-        raise ValueError("Product not found in sale items.")
+    def to_dict(self):
+        return {
+            "date": self.date.strftime("%Y-%m-%d %H:%M:%S"),
+            "client": self.client.to_dict() if self.client else None,
+            "items": [item.to_dict() for item in self.items],
+            "amount": self.amount
+        }

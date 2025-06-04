@@ -1,42 +1,31 @@
 [
     {
-        "product": {
-            "code": 1,
-            "name": "Arroz Branco Tio Lino 1KG",
-            "price": 4.99
-        },
+        "code": 1,
+        "name": "Arroz Branco Tio Lino 1KG",
+        "price": 4.99,
         "quantity": 100
     },
     {
-        "product": {
-            "code": 2,
-            "name": "Feijão Carioca Tio Lino 1KG",
-            "price": 6.99
-        },
+        "code": 2,
+        "name": "Feijão Carioca Tio Lino 1KG",
+        "price": 6.99,
         "quantity": 50
-    },
-    {
-        "product": {
-            "code": 3,
-            "name": "Macarrão Espaguete Tio Lino 500G",
-            "price": 3.49
-        },
+    },{
+        "code": 3,
+        "name": "Macarrão Espaguete Tio Lino 500G",
+        "price": 3.49,
         "quantity": 200
     },
     {
-        "product": {
-            "code": 4,
-            "name": "Açúcar Cristal Tio Lino 1KG",
-            "price": 2.99
-        },
+        "code": 4,
+        "name": "Açúcar Cristal Tio Lino 1KG",
+        "price": 2.99,
         "quantity": 150
     },
     {
-        "product": {
-            "code": 5,
-            "name": "Sal Refinado Tio Lino 1KG",
-            "price": 1.49
-        },
+        "code": 5,
+        "name": "Sal Refinado Tio Lino 1KG",
+        "price": 1.49,
         "quantity": 300
     }
 ]
